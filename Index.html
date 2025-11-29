@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCast Pro - Advanced Weather Forecast</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <!-- Animated Background Elements -->
+    <div class="background-container">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+        <div class="cloud cloud-4"></div>
+        <div class="cloud cloud-5"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="floating-particle"></div>
+        <div class="floating-particle"></div>
+        <div class="floating-particle"></div>
+        <div class="floating-particle"></div>
+        <div class="floating-particle"></div>
+    </div>
+
+    <!-- Theme Selector -->
+    <div class="theme-selector">
+        <button class="theme-btn active" data-theme="sunrise">
+            <i class="fas fa-sun"></i>
+            <span>Sunrise</span>
+        </button>
+        <button class="theme-btn" data-theme="night">
+            <i class="fas fa-moon"></i>
+            <span>Night</span>
+        </button>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-cloud-sun-rain"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>SkyCast Pro</h1>
+                    <span class="tagline">Advanced Weather Intelligence</span>
+                </div>
+                <span class="live-indicator">
+                    <i class="fas fa-circle"></i>
+                    LIVE
+                </span>
+            </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Search city...">
+                    <button id="search-btn" class="search-action-btn">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <button id="location-btn" class="location-btn" title="Use Current Location">
+                    <i class="fas fa-location-arrow"></i>
+                </button>
+            </div>
+            <div class="header-controls">
+                <div class="units-toggle">
+                    <button class="unit-btn active" data-unit="metric">°C</button>
+                    <button class="unit-btn" data-unit="imperial">°F</button>
+                </div>
+                <button id="refresh-btn" class="control-btn" title="Refresh Data">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button id="fullscreen-btn" class="control-btn" title="Fullscreen">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Current Weather Section -->
+            <section class="current-weather">
+                <div class="weather-card glass-card">
+                    <div class="location-info">
+                        <h2 id="city-name">New York</h2>
+                        <p id="current-date">Monday, June 12, 2023</p>
+                        <div class="time-display">
+                            <i class="fas fa-clock"></i>
+                            <span id="current-time">12:00 PM</span>
+                            <span class="real-time-badge">Real-time</span>
+                        </div>
+                    </div>
+                    <div class="weather-main">
+                        <div class="temperature-display">
+                            <div class="temperature">
+                                <span id="current-temp">22</span>
+                                <span class="unit">°C</span>
+                            </div>
+                            <div class="weather-icon">
+                                <img id="weather-icon" src="https://openweathermap.org/img/wn/01d@2x.png" alt="Weather Icon">
+                                <p id="weather-desc">Clear Sky</p>
+                                <div class="feels-like">
+                                    Feels like <span id="feels-like">24</span><span class="unit">°C</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="detail-item glass-card">
+                            <i class="fas fa-wind"></i>
+                            <div>
+                                <p>Wind</p>
+                                <p id="wind-speed">5 km/h</p>
+                            </div>
+                        </div>
+                        <div class="detail-item glass-card">
+                            <i class="fas fa-tint"></i>
+                            <div>
+                                <p>Humidity</p>
+                                <p id="humidity">65%</p>
+                            </div>
+                        </div>
+                        <div class="detail-item glass-card">
+                            <i class="fas fa-compress-alt"></i>
+                            <div>
+                                <p>Pressure</p>
+                                <p id="pressure">1013 hPa</p>
+                            </div>
+                        </div>
+                        <div class="detail-item glass-card">
+                            <i class="fas fa-eye"></i>
+                            <div>
+                                <p>Visibility</p>
+                                <p id="visibility">10 km</p>
+                            </div>
+                        </div>
+                        <div class="detail-item glass-card">
+                            <i class="fas fa-cloud"></i>
+                            <div>
+                                <p>Cloudiness</p>
+                                <p id="cloudiness">20%</p>
+                            </div>
+                        </div>
+                        <div class="detail-item glass-card">
+                            <i class="fas fa-sun"></i>
+                            <div>
+                                <p>UV Index</p>
+                                <p id="uv-index">3</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Forecast Sections -->
+            <section class="forecast-section">
+                <h2 class="section-title">5-Day Forecast</h2>
+                <div class="forecast-container" id="forecast-container">
+                    <!-- Forecast items will be dynamically added here -->
+                </div>
+            </section>
+
+            <section class="hourly-section">
+                <h2 class="section-title">24-Hour Forecast</h2>
+                <div class="hourly-container" id="hourly-container">
+                    <!-- Hourly forecast items will be dynamically added here -->
+                </div>
+            </section>
+
+            <!-- Radar and Maps Section -->
+            <section class="radar-section">
+                <h2 class="section-title">Live Weather Radar & Maps</h2>
+                <div class="radar-controls">
+                    <button class="radar-btn active" data-layer="precipitation">
+                        <i class="fas fa-cloud-rain"></i>
+                        Precipitation
+                    </button>
+                    <button class="radar-btn" data-layer="clouds">
+                        <i class="fas fa-cloud"></i>
+                        Clouds
+                    </button>
+                    <button class="radar-btn" data-layer="temperature">
+                        <i class="fas fa-thermometer-half"></i>
+                        Temperature
+                    </button>
+                    <button class="radar-btn" data-layer="wind">
+                        <i class="fas fa-wind"></i>
+                        Wind
+                    </button>
+                    <button class="radar-btn" data-layer="pressure">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        Pressure
+                    </button>
+                </div>
+                <div class="radar-container glass-card">
+                    <div id="weather-map"></div>
+                    <div class="map-legend">
+                        <div class="legend-title" id="legend-title">Precipitation Intensity</div>
+                        <div class="legend-gradient" id="legend-gradient">
+                            <!-- Legend will be dynamically generated -->
+                        </div>
+                        <div class="legend-labels">
+                            <span>Low</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Additional Info Section -->
+            <section class="additional-info">
+                <div class="info-card glass-card">
+                    <div class="card-header">
+                        <h3>Air Quality</h3>
+                        <span class="update-time" id="aqi-update">Updated: Just now</span>
+                    </div>
+                    <div class="air-quality">
+                        <div class="aqi-value" id="aqi-value">45</div>
+                        <div class="aqi-level" id="aqi-level">Good</div>
+                    </div>
+                    <div class="pollutants">
+                        <div class="pollutant">
+                            <span>PM2.5</span>
+                            <span id="pm25">12 μg/m³</span>
+                        </div>
+                        <div class="pollutant">
+                            <span>PM10</span>
+                            <span id="pm10">20 μg/m³</span>
+                        </div>
+                        <div class="pollutant">
+                            <span>O₃</span>
+                            <span id="o3">45 μg/m³</span>
+                        </div>
+                        <div class="pollutant">
+                            <span>NO₂</span>
+                            <span id="no2">15 μg/m³</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card glass-card">
+                    <div class="card-header">
+                        <h3>Sun & Moon</h3>
+                    </div>
+                    <div class="sun-moon-info">
+                        <div class="astro-item">
+                            <div class="astro-icon">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                            <div class="astro-details">
+                                <p>Sunrise</p>
+                                <p id="sunrise">6:12 AM</p>
+                            </div>
+                        </div>
+                        <div class="astro-item">
+                            <div class="astro-icon">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <div class="astro-details">
+                                <p>Sunset</p>
+                                <p id="sunset">8:45 PM</p>
+                            </div>
+                        </div>
+                        <div class="astro-item">
+                            <div class="astro-icon">
+                                <i class="fas fa-long-arrow-alt-up"></i>
+                            </div>
+                            <div class="astro-details">
+                                <p>Day Length</p>
+                                <p id="day-length">14h 33m</p>
+                            </div>
+                        </div>
+                        <div class="astro-item">
+                            <div class="astro-icon">
+                                <i class="fas fa-moon"></i>
+                            </div>
+                            <div class="astro-details">
+                                <p>Moon Phase</p>
+                                <p id="moon-phase">Waxing Crescent</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card glass-card">
+                    <div class="card-header">
+                        <h3>Precipitation</h3>
+                    </div>
+                    <div class="precipitation-info">
+                        <div class="precip-item">
+                            <div class="precip-icon">
+                                <i class="fas fa-cloud-rain"></i>
+                            </div>
+                            <div class="precip-details">
+                                <p>Chance of Rain</p>
+                                <p id="rain-chance">15%</p>
+                            </div>
+                        </div>
+                        <div class="precip-item">
+                            <div class="precip-icon">
+                                <i class="fas fa-snowflake"></i>
+                            </div>
+                            <div class="precip-details">
+                                <p>Precipitation</p>
+                                <p id="precipitation">0 mm</p>
+                            </div>
+                        </div>
+                        <div class="precip-item">
+                            <div class="precip-icon">
+                                <i class="fas fa-umbrella"></i>
+                            </div>
+                            <div class="precip-details">
+                                <p>Rain Volume</p>
+                                <p id="rain-volume">0 mm</p>
+                            </div>
+                        </div>
+                        <div class="precip-item">
+                            <div class="precip-icon">
+                                <i class="fas fa-wind"></i>
+                            </div>
+                            <div class="precip-details">
+                                <p>Snow Volume</p>
+                                <p id="snow-volume">0 mm</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weather News Section -->
+            <section class="news-section">
+                <h2 class="section-title">Weather News & Alerts</h2>
+                <div class="alerts-container" id="alerts-container">
+                    <!-- Weather alerts will be dynamically added here -->
+                </div>
+                <div class="news-container" id="news-container">
+                    <!-- News items will be dynamically added here -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p>Powered by OpenWeatherMap API & Open-Meteo</p>
+                <p class="api-status">
+                    <i class="fas fa-circle status-online"></i>
+                    API Status: <span id="api-status">Online</span>
+                    <span class="last-update" id="last-update">Last updated: Just now</span>
+                </p>
+                <p>&copy; 2025 SkyCast Pro. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Loading real-time weather data...</p>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="error-modal" id="error-modal">
+        <div class="modal-content glass-card">
+            <div class="modal-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Weather Update Required</h3>
+            <p id="error-message">Unable to fetch weather data. Please check your connection and try again.</p>
+            <button id="close-error" class="modal-btn">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
